@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>幸运抽奖</title>
+    <title>活动参与</title>
     <style>
         * {
             margin: 0;
@@ -34,12 +34,11 @@
             border-radius: 50%;
             border: 3px solid #ff9500;
             margin: 0 auto 20px;
-            overflow: hidden;
-        }
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #ff9500;
         }
         .title {
             font-size: 22px;
@@ -59,73 +58,31 @@
             background: #ccc;
         }
         .result {
-            font-size: 19px;
+            font-size: 18px;
+            margin-top: 25px;
             font-weight: bold;
-            margin: 25px 0 15px;
-        }
-        .win-text {
-            color: #e64340;
-        }
-        .lose-text {
-            color: #666;
-        }
-        .bike {
-            width: 180px;
-            margin: 0 auto;
+            color: #2da44e;
             display: none;
         }
     </style>
 </head>
 <body>
     <div class="wrap">
-        <div class="avatar">
-            <img id="avatar" src="https://img.icons8.com/fluency/96/000000/user.png" alt="头像">
-        </div>
-        <h2 class="title" id="username">加载中...</h2>
-        <button class="btn" id="lotteryBtn" disabled>立即抽奖</button>
-        <div class="result" id="resultBox"></div>
-        <img class="bike" id="bikeImg" src="https://img.icons8.com/fluency/200/000000/scooter.png" alt="电动车">
+        <div class="avatar">🎁</div>
+        <h2 class="title">活动参与</h2>
+        <button class="btn" id="joinBtn">立即参与抽奖</button>
+        <div class="result" id="successTip">✅ 参与成功！感谢参与，结果统一公示</div>
     </div>
-
     <script>
-        // ========== 这里是你的配置 ==========
-        const WIN_NICKNAMES = ["三更"]; // 中奖微信昵称
-        // ==================================
-
-        // 解析URL参数
-        function getUrlParam(key) {
-            const params = new URLSearchParams(window.location.search);
-            return params.get(key);
-        }
-
-        // 简化版抽奖逻辑（无需后端）
-        const name = getUrlParam('name');
-        if (name) {
-            document.getElementById('username').innerText = `${name}，点击抽奖`;
-            document.getElementById('lotteryBtn').disabled = false;
-            const isWin = WIN_NICKNAMES.includes(name);
-
-            document.getElementById('lotteryBtn').addEventListener('click', function() {
-                this.disabled = true;
-                this.innerText = "抽奖中...";
-                document.getElementById('resultBox').innerText = "";
-                document.getElementById('bikeImg').style.display = "none";
-
-                setTimeout(() => {
-                    if (isWin) {
-                        document.getElementById('resultBox').innerText = "🎉 恭喜！喜提电动车一台";
-                        document.getElementById('resultBox').className = "result win-text";
-                        document.getElementById('bikeImg').style.display = "block";
-                    } else {
-                        document.getElementById('resultBox').innerText = "很遗憾，本次未中奖";
-                        document.getElementById('resultBox').className = "result lose-text";
-                    }
-                    this.disabled = false;
-                    this.innerText = "立即抽奖";
-                }, 1200);
-            });
-        } else {
-            document.getElementById('username').innerText = "请在地址栏加上 ?name=你的昵称 再打开";
+        const btn = document.getElementById('joinBtn');
+        const tip = document.getElementById('successTip');
+        btn.onclick = () => {
+            btn.disabled = true;
+            btn.innerText = "参与中...";
+            setTimeout(() => {
+                btn.style.display = "none";
+                tip.style.display = "block";
+            }, 800);
         }
     </script>
 </body>
