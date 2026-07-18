@@ -2,188 +2,209 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>官方抽奖</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸运大抽奖</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            font-family: "微软雅黑", Arial, sans-serif;
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
+            font-family: "微软雅黑", Arial, sans-serif;
+            padding: 20px;
         }
-
-        .wrap {
-            background: #fff;
-            width: 100%;
-            max-width: 420px;
-            border-radius: 24px;
-            padding: 35px 25px;
+        .header {
             text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+            margin-bottom: 20px;
         }
-
-        h1 {
-            font-size: 24px;
-            color: #d4af37;
-            margin-bottom: 25px;
-            font-weight: bold;
+        .header h1 {
+            font-size: 60px;
+            color: #fff;
+            text-shadow: 3px 3px 0 #ff6a00;
         }
-
-        .lottery-box {
-            background: #f5f7fb;
-            border-radius: 20px;
-            padding: 30px 20px;
-            margin-bottom: 25px;
-            min-height: 260px;
+        .main-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        .draw-area {
+            background: #fff8dc;
+            border-radius: 10px;
+            width: 600px;
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+        .draw-title {
+            background: #e74c3c;
+            color: #fff;
+            width: 150px;
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .avatar-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: #eee;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
+            margin-bottom: 20px;
+            overflow: hidden;
         }
-
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #d4af37;
-            margin-bottom: 15px;
-            display: none;
-        }
-
-        .name {
-            font-size: 22px;
-            color: #222;
-            font-weight: bold;
-            display: none;
-        }
-
-        .rolling-text {
-            font-size: 28px;
-            color: #007bff;
-            font-weight: bold;
-            animation: flash 0.6s infinite;
-        }
-
-        @keyframes flash {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #d4af37, #ffed4e);
-            color: #111;
-            border: none;
-            font-size: 18px;
-            padding: 14px 40px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
+        .avatar-circle img {
             width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-
+        .status-text {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .hint-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .btn {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 12px 40px;
+            font-size: 18px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
         .btn:disabled {
             opacity: 0.6;
         }
-
-        .result {
-            margin-top: 20px;
-            font-size: 16px;
-            color: #2da44e;
-            font-weight: bold;
-            display: none;
+        .list-area {
+            background: #fff8dc;
+            border-radius: 10px;
+            width: 250px;
+            height: 450px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            padding: 10px;
         }
-
-        .tips {
-            margin-top: 12px;
-            font-size: 13px;
-            color: #777;
-            display: none;
+        .list-title {
+            background: #e74c3c;
+            color: #fff;
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px 5px 0 0;
+            margin: -10px -10px 10px -10px;
+        }
+        .winner-list {
+            list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .winner-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .winner-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
         }
     </style>
 </head>
 <body>
-
-<div class="wrap">
-    <h1>🎉 官方抽奖</h1>
-
-    <div class="lottery-box">
-        <div class="rolling-text" id="rollingText">点击下方按钮开始抽奖</div>
-        <img class="avatar" id="avatar" src="" alt="中奖头像">
-        <div class="name" id="name"></div>
+    <div class="header">
+        <h1>幸运大抽奖</h1>
     </div>
 
-    <button class="btn" id="startBtn">开始抽奖</button>
+    <div class="main-container">
+        <div class="draw-area">
+            <div class="draw-title">特等奖</div>
+            <div class="avatar-circle" id="avatarCircle">
+                <span id="statusText" class="status-text">等待抽奖</span>
+            </div>
+            <div class="hint-text" id="hintText">等待开始抽奖</div>
+            <button class="btn" id="drawBtn">开始抽奖</button>
+        </div>
 
-    <div class="result" id="result">✅ 抽奖完成</div>
-    <div class="tips" id="tips">中奖结果请以现场公示为准</div>
-</div>
+        <div class="list-area">
+            <div class="list-title">中奖名单</div>
+            <ul class="winner-list" id="winnerList"></ul>
+        </div>
+    </div>
 
 <script>
-    var startBtn = document.getElementById('startBtn');
-    var rollingText = document.getElementById('rollingText');
-    var avatar = document.getElementById('avatar');
-    var name = document.getElementById('name');
-    var result = document.getElementById('result');
-    var tips = document.getElementById('tips');
-
-    // 你这里可以放多个抽奖候选名单
-    var candidates = [
-        { name: "Zh", avatar: "https://87x75s1.github.io/choujiang/zh.jpg" },
-        { name: "User1", avatar: "https://87x75s1.github.io/choujiang/zh.jpg" },
-        { name: "User2", avatar: "https://87x75s1.github.io/choujiang/zh.jpg" },
-        { name: "User3", avatar: "https://87x75s1.github.io/choujiang/zh.jpg" }
+    // 配置区：填写cc文件夹下所有图片文件名
+    const allImages = [
+        "Li.png",
+        "img1.png",
+        "img2.png",
+        "img3.png"
+        // 继续追加你cc目录下的所有图片
     ];
+    // 固定中奖信息
+    const winnerConfig = {
+        name: "Li",
+        image: "Li.png"
+    };
 
-    var rollTimer = null;
+    // 图片基础路径（cc文件夹）
+    const baseUrl = "https://raw.githubusercontent.com/87x75s1/choujiang/main/cc/";
+    const imageUrls = allImages.map(name => baseUrl + name);
+    const winnerImgUrl = baseUrl + winnerConfig.image;
 
-    startBtn.onclick = function () {
-        startBtn.disabled = true;
-        startBtn.innerText = "抽奖中...";
+    const avatarCircle = document.getElementById('avatarCircle');
+    const statusText = document.getElementById('statusText');
+    const hintText = document.getElementById('hintText');
+    const drawBtn = document.getElementById('drawBtn');
+    const winnerList = document.getElementById('winnerList');
 
-        var index = 0;
-        rollingText.style.display = "block";
-        avatar.style.display = "none";
-        name.style.display = "none";
-        result.style.display = "none";
-        tips.style.display = "none";
+    let rollTimer = null;
+    let isRolling = false;
 
-        rollTimer = setInterval(function () {
-            index++;
-            var randomIndex = Math.floor(Math.random() * candidates.length);
-            rollingText.innerText = candidates[randomIndex].name;
-        }, 80);
+    drawBtn.onclick = function() {
+        if (!isRolling) {
+            // 开始抽奖：循环cc内所有图片
+            isRolling = true;
+            drawBtn.innerText = "停止抽奖";
+            hintText.innerText = "抽奖中...";
+            statusText.style.display = 'none';
 
-        setTimeout(function () {
+            let index = 0;
+            rollTimer = setInterval(() => {
+                index = (index + 1) % imageUrls.length;
+                avatarCircle.innerHTML = `<img src="${imageUrls[index]}" alt="抽奖头像">`;
+            }, 100);
+        } else {
+            // 停止抽奖：固定显示 Li.png + 名称 Li
+            isRolling = false;
             clearInterval(rollTimer);
+            drawBtn.disabled = true;
+            drawBtn.innerText = "抽奖完成";
 
-            // 最终中奖者固定为 Zh
-            var winner = {
-                name: "Zh",
-                avatar: "https://87x75s1.github.io/choujiang/zh.jpg"
-            };
+            avatarCircle.innerHTML = `<img src="${winnerImgUrl}" alt="中奖头像">`;
+            hintText.innerText = `恭喜 ${winnerConfig.name} 中奖！`;
 
-            rollingText.style.display = "none";
-            avatar.src = winner.avatar;
-            avatar.style.display = "block";
-            name.innerText = winner.name;
-            name.style.display = "block";
-            result.style.display = "block";
-            tips.style.display = "block";
-
-            startBtn.style.display = "none";
-        }, 2500);
+            // 右侧中奖名单同步展示
+            const li = document.createElement('li');
+            li.className = 'winner-item';
+            li.innerHTML = `<img src="${winnerImgUrl}" alt=""><span>${winnerConfig.name}</span>`;
+            winnerList.prepend(li);
+        }
     };
 </script>
-
 </body>
 </html>
