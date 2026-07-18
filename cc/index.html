@@ -66,6 +66,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
         .status-text {
             font-size: 20px;
@@ -122,6 +123,7 @@
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
+            display: block;
         }
     </style>
 </head>
@@ -147,24 +149,23 @@
     </div>
 
 <script>
-    // 配置区：填写cc文件夹下所有图片文件名
-    const allImages = [
-        "Li.png",
-        "img1.png",
-        "img2.png",
-        "img3.png"
-        // 继续追加你cc目录下的所有图片
-    ];
-    // 固定中奖信息
+    // 轮询：1.jpg ~ 39.jpg 位于 cc/新建文件夹/
+    const rollImages = [];
+    for(let i = 1; i <= 39; i++){
+        rollImages.push(i + ".jpg");
+    }
+
+    // 中奖信息：cc/Li.jpg  名称 Li
     const winnerConfig = {
         name: "Li",
-        image: "Li.png"
+        image: "Li.jpg"
     };
 
-    // 图片基础路径（cc文件夹）
-    const baseUrl = "https://raw.githubusercontent.com/87x75s1/choujiang/main/cc/";
-    const imageUrls = allImages.map(name => baseUrl + name);
-    const winnerImgUrl = baseUrl + winnerConfig.image;
+    const baseRollUrl = "https://raw.githubusercontent.com/87x75s1/choujiang/main/cc/新建文件夹/";
+    const baseWinnerUrl = "https://raw.githubusercontent.com/87x75s1/choujiang/main/cc/";
+
+    const rollImageUrls = rollImages.map(name => baseRollUrl + name);
+    const winnerImageUrl = baseWinnerUrl + winnerConfig.image;
 
     const avatarCircle = document.getElementById('avatarCircle');
     const statusText = document.getElementById('statusText');
@@ -177,7 +178,6 @@
 
     drawBtn.onclick = function() {
         if (!isRolling) {
-            // 开始抽奖：循环cc内所有图片
             isRolling = true;
             drawBtn.innerText = "停止抽奖";
             hintText.innerText = "抽奖中...";
@@ -185,23 +185,21 @@
 
             let index = 0;
             rollTimer = setInterval(() => {
-                index = (index + 1) % imageUrls.length;
-                avatarCircle.innerHTML = `<img src="${imageUrls[index]}" alt="抽奖头像">`;
+                index = (index + 1) % rollImageUrls.length;
+                avatarCircle.innerHTML = `<img src="${rollImageUrls[index]}" alt="抽奖头像">`;
             }, 100);
         } else {
-            // 停止抽奖：固定显示 Li.png + 名称 Li
             isRolling = false;
             clearInterval(rollTimer);
             drawBtn.disabled = true;
             drawBtn.innerText = "抽奖完成";
 
-            avatarCircle.innerHTML = `<img src="${winnerImgUrl}" alt="中奖头像">`;
+            avatarCircle.innerHTML = `<img src="${winnerImageUrl}" alt="中奖头像">`;
             hintText.innerText = `恭喜 ${winnerConfig.name} 中奖！`;
 
-            // 右侧中奖名单同步展示
             const li = document.createElement('li');
             li.className = 'winner-item';
-            li.innerHTML = `<img src="${winnerImgUrl}" alt=""><span>${winnerConfig.name}</span>`;
+            li.innerHTML = `<img src="${winnerImageUrl}" alt=""><span>${winnerConfig.name}</span>`;
             winnerList.prepend(li);
         }
     };
