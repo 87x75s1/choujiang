@@ -149,23 +149,22 @@
     </div>
 
 <script>
-    // 轮询：1.jpg ~ 39.jpg 位于 cc/新建文件夹/
+    // -------------------------- 路径配置区 --------------------------
+    // 1. 轮询图片：cc/images/ 下的 1.jpg ~ 39.jpg
     const rollImages = [];
     for(let i = 1; i <= 39; i++){
-        rollImages.push(i + ".jpg");
+        rollImages.push("cc/images/" + i + ".jpg");
     }
-
-    // 中奖信息：cc/Li.jpg  名称 Li
+    // 2. 中奖图片：cc/winner.jpg
     const winnerConfig = {
         name: "Li",
-        image: "Li.jpg"
+        image: "cc/winner.jpg"
     };
+    // ----------------------------------------------------------------
 
-    const baseRollUrl = "https://raw.githubusercontent.com/87x75s1/choujiang/main/cc/新建文件夹/";
-    const baseWinnerUrl = "https://raw.githubusercontent.com/87x75s1/choujiang/main/cc/";
-
-    const rollImageUrls = rollImages.map(name => baseRollUrl + name);
-    const winnerImageUrl = baseWinnerUrl + winnerConfig.image;
+    // 拼接完整路径（相对路径，比raw CDN更稳定）
+    const rollImageUrls = rollImages.map(name => name);
+    const winnerImageUrl = winnerConfig.image;
 
     const avatarCircle = document.getElementById('avatarCircle');
     const statusText = document.getElementById('statusText');
@@ -178,6 +177,7 @@
 
     drawBtn.onclick = function() {
         if (!isRolling) {
+            // 开始抽奖：循环轮询图片
             isRolling = true;
             drawBtn.innerText = "停止抽奖";
             hintText.innerText = "抽奖中...";
@@ -189,6 +189,7 @@
                 avatarCircle.innerHTML = `<img src="${rollImageUrls[index]}" alt="抽奖头像">`;
             }, 100);
         } else {
+            // 停止抽奖：固定显示中奖图片
             isRolling = false;
             clearInterval(rollTimer);
             drawBtn.disabled = true;
@@ -197,6 +198,7 @@
             avatarCircle.innerHTML = `<img src="${winnerImageUrl}" alt="中奖头像">`;
             hintText.innerText = `恭喜 ${winnerConfig.name} 中奖！`;
 
+            // 右侧名单同步更新
             const li = document.createElement('li');
             li.className = 'winner-item';
             li.innerHTML = `<img src="${winnerImageUrl}" alt=""><span>${winnerConfig.name}</span>`;
