@@ -2,98 +2,38 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>幸运抽电动车</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "微软雅黑", sans-serif;
-        }
-        body {
-            background: linear-gradient(135deg, #ff6a00, #ee0979);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .card {
-            background: #fff;
-            width: 100%;
-            max-width: 360px;
-            border-radius: 24px;
-            padding: 40px 25px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .icon {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #ff6a00, #ee0979);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            color: #fff;
-        }
-        .title {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .desc {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 30px;
-        }
-        .btn {
-            background: linear-gradient(135deg, #ff6a00, #ee0979);
-            color: #fff;
-            border: none;
-            font-size: 18px;
-            padding: 14px 45px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: opacity 0.3s;
-        }
-        .btn:disabled {
-            opacity: 0.7;
-        }
-        .result {
-            font-size: 18px;
-            margin-top: 25px;
-            font-weight: bold;
-            color: #2da44e;
-            display: none;
-        }
+        body{margin:0;padding:0;background:#f95959;background:linear-gradient(135deg,#ff6a00,#ee0979);min-height:100vh;font-family:"微软雅黑",sans-serif;}
+        .box{background:#fff;width:90%;max-width:360px;margin:50px auto;border-radius:20px;padding:30px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.2);}
+        .icon{font-size:60px;margin-bottom:15px;}
+        h2{font-size:22px;color:#333;margin:0 0 10px;}
+        p{font-size:15px;color:#666;margin-bottom:25px;}
+        .btn{background:linear-gradient(135deg,#ff6a00,#ee0979);color:#fff;border:none;font-size:17px;padding:12px 30px;border-radius:50px;cursor:pointer;}
+        .btn:disabled{opacity:0.7;}
+        .tip{margin-top:20px;font-size:16px;color:#2da44e;font-weight:bold;display:none;}
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="icon">🛵</div>
-        <h2 class="title">幸运抽电动车</h2>
-        <p class="desc">扫码参与活动，即有机会赢取电动车大奖！</p>
-        <button class="btn" id="drawBtn">点击参与抽奖</button>
-        <div class="result" id="successTip">✅ 参与成功！结果将统一公布，感谢参与！</div>
-    </div>
-
-    <script>
-        const btn = document.getElementById('drawBtn');
-        const tip = document.getElementById('successTip');
-
-        btn.addEventListener('click', () => {
-            btn.disabled = true;
-            btn.innerText = "抽奖中...";
-
-            setTimeout(() => {
-                btn.style.display = "none";
-                tip.style.display = "block";
-            }, 800);
-        });
-    </script>
+<div class="box">
+    <div class="icon">🛵</div>
+    <h2>幸运抽电动车</h2>
+    <p>点击抽奖，即有机会赢取电动车大奖！</p>
+    <button class="btn" id="btn">点击立即抽奖</button>
+    <div class="tip" id="tip">✅ 参与成功！结果将统一公布</div>
+</div>
+<script>
+    const btn=document.getElementById('btn');
+    const tip=document.getElementById('tip');
+    btn.onclick=function(){
+        this.disabled=true;
+        this.innerText='抽奖中...';
+        setTimeout(()=>{
+            this.style.display='none';
+            tip.style.display='block';
+        },800);
+    };
+</script>
 </body>
 </html>
