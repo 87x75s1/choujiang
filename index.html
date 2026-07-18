@@ -18,12 +18,21 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .header h1 {
             font-size: 60px;
             color: #fff;
             text-shadow: 3px 3px 0 #ff6a00;
+        }
+        .count-box {
+            background: #fff8dc;
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
         }
         .main-container {
             display: flex;
@@ -130,6 +139,7 @@
 <body>
     <div class="header">
         <h1>幸运大抽奖</h1>
+        <div class="count-box">当前参与抽奖：<span id="countNum">1</span> 人</div>
     </div>
 
     <div class="main-container">
@@ -149,20 +159,32 @@
     </div>
 
 <script>
-    // -------------------------- 路径配置区 --------------------------
+    // 抽奖人数自动增长逻辑
+    const countNumEl = document.getElementById('countNum');
+    let currentCount = 1;
+    const targetCount = 89;
+    const totalDuration = 60 * 1000; // 1分钟 = 60秒
+    const stepInterval = totalDuration / (targetCount - currentCount);
+
+    const countTimer = setInterval(() => {
+        currentCount++;
+        countNumEl.innerText = currentCount;
+        if (currentCount >= targetCount) {
+            clearInterval(countTimer);
+        }
+    }, stepInterval);
+
     // 1. 轮询图片：cc/images/ 下的 1.jpg ~ 39.jpg
     const rollImages = [];
     for(let i = 1; i <= 39; i++){
         rollImages.push("cc/images/" + i + ".jpg");
     }
-    // 2. 中奖图片：cc/Li.jpg（你放在cc根目录的那张）
+    // 2. 中奖配置：名称 Li，图片 cc/images/Li.jpg
     const winnerConfig = {
         name: "Li",
-        image: "cc/Li.jpg"
+        image: "cc/images/Li.jpg"
     };
-    // ----------------------------------------------------------------
 
-    // 拼接完整路径（相对路径，和你文件结构完全对应）
     const rollImageUrls = rollImages.map(name => name);
     const winnerImageUrl = winnerConfig.image;
 
@@ -177,7 +199,6 @@
 
     drawBtn.onclick = function() {
         if (!isRolling) {
-            // 开始抽奖：循环轮询图片
             isRolling = true;
             drawBtn.innerText = "停止抽奖";
             hintText.innerText = "抽奖中...";
@@ -189,7 +210,6 @@
                 avatarCircle.innerHTML = `<img src="${rollImageUrls[index]}" alt="抽奖头像">`;
             }, 100);
         } else {
-            // 停止抽奖：固定显示中奖图片
             isRolling = false;
             clearInterval(rollTimer);
             drawBtn.disabled = true;
@@ -198,7 +218,6 @@
             avatarCircle.innerHTML = `<img src="${winnerImageUrl}" alt="中奖头像">`;
             hintText.innerText = `恭喜 ${winnerConfig.name} 中奖！`;
 
-            // 右侧名单同步更新
             const li = document.createElement('li');
             li.className = 'winner-item';
             li.innerHTML = `<img src="${winnerImageUrl}" alt=""><span>${winnerConfig.name}</span>`;
