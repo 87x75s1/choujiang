@@ -155,14 +155,14 @@
     for(let i = 1; i <= 39; i++){
         rollImages.push("cc/images/" + i + ".jpg");
     }
-    // 2. 中奖图片：cc/winner.jpg
+    // 2. 中奖图片：cc/Li.jpg（你放在cc根目录的那张）
     const winnerConfig = {
         name: "Li",
-        image: "cc/winner.jpg"
+        image: "cc/Li.jpg"
     };
     // ----------------------------------------------------------------
 
-    // 拼接完整路径（相对路径，比raw CDN更稳定）
+    // 拼接完整路径（相对路径，和你文件结构完全对应）
     const rollImageUrls = rollImages.map(name => name);
     const winnerImageUrl = winnerConfig.image;
 
