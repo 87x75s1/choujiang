@@ -145,7 +145,7 @@
 
     <div class="main-container">
         <div class="draw-area">
-            <div class="count-box">当前参与抽奖：<span id="countNum">14</span> 人</div>
+            <div class="count-box">当前参与抽奖：<span id="countNum">0</span> 人</div>
             <div class="draw-title">特等奖</div>
             <div class="avatar-circle" id="avatarCircle">
                 <span id="statusText" class="status-text">等待抽奖</span>
@@ -161,17 +161,24 @@
     </div>
 
 <script>
-    // ========== 人数增长逻辑 ==========
+    // ========== 人数增长（严格按你说的） ==========
     const countNumEl = document.getElementById('countNum');
-    let currentCount = 14;
+    let currentCount = 0;
+    const startAfter10s = 14;
     const targetCount = 89;
-    const growTotalTime = 60 * 1000;    // 增长总时长 60秒
-    const delayStart = 10 * 1000;       // 延迟10秒再开始增长
+    const growDuration = 60 * 1000; // 60秒涨完
+    const delayStart = 10 * 1000;    // 先等10秒
 
-    // 10秒后启动计数
+    // 初始显示 0
+    countNumEl.innerText = currentCount;
+
     setTimeout(() => {
-        const totalStep = targetCount - currentCount;
-        const stepTime = growTotalTime / totalStep;
+        // 10秒到了，先跳到14
+        currentCount = startAfter10s;
+        countNumEl.innerText = currentCount;
+
+        const totalStep = targetCount - startAfter10s;
+        const stepTime = growDuration / totalStep;
 
         const countTimer = setInterval(() => {
             currentCount++;
@@ -193,14 +200,14 @@
         image: basePath + "Li.jpg"
     };
 
-    // 预加载图片，避免空白
+    // 预加载，避免空白
     const allImageUrls = [...rollImages, winnerConfig.image];
     allImageUrls.forEach(url => {
         const img = new Image();
         img.src = url;
     });
 
-    // ========== 抽奖逻辑 ==========
+    // ========== 抽奖头像滚动（更慢：300ms） ==========
     const avatarCircle = document.getElementById('avatarCircle');
     const statusText = document.getElementById('statusText');
     const hintText = document.getElementById('hintText');
@@ -209,7 +216,7 @@
 
     let rollTimer = null;
     let isRolling = false;
-    const rollSpeed = 200; // 轮播间隔 200ms，速度更慢
+    const rollSpeed = 300; // 更慢，防止空白
 
     drawBtn.onclick = function() {
         if (!isRolling) {
