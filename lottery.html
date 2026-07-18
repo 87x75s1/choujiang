@@ -2,17 +2,67 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 关键：强制移动端适配 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>幸运抽电动车</title>
     <style>
-        body{margin:0;padding:0;background:#f95959;background:linear-gradient(135deg,#ff6a00,#ee0979);min-height:100vh;font-family:"微软雅黑",sans-serif;}
-        .box{background:#fff;width:90%;max-width:360px;margin:50px auto;border-radius:20px;padding:30px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.2);}
-        .icon{font-size:60px;margin-bottom:15px;}
-        h2{font-size:22px;color:#333;margin:0 0 10px;}
-        p{font-size:15px;color:#666;margin-bottom:25px;}
-        .btn{background:linear-gradient(135deg,#ff6a00,#ee0979);color:#fff;border:none;font-size:17px;padding:12px 30px;border-radius:50px;cursor:pointer;}
-        .btn:disabled{opacity:0.7;}
-        .tip{margin-top:20px;font-size:16px;color:#2da44e;font-weight:bold;display:none;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #ff6a00;
+            font-family: "微软雅黑", Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        .box {
+            background: #fff;
+            width: 100%;
+            max-width: 360px;
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+        .btn {
+            background: #ff6a00;
+            color: #fff;
+            border: none;
+            font-size: 17px;
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn:disabled {
+            opacity: 0.7;
+        }
+        .tip {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #2da44e;
+            font-weight: bold;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -24,15 +74,15 @@
     <div class="tip" id="tip">✅ 参与成功！结果将统一公布</div>
 </div>
 <script>
-    const btn=document.getElementById('btn');
-    const tip=document.getElementById('tip');
-    btn.onclick=function(){
-        this.disabled=true;
-        this.innerText='抽奖中...';
-        setTimeout(()=>{
-            this.style.display='none';
-            tip.style.display='block';
-        },800);
+    var btn = document.getElementById('btn');
+    var tip = document.getElementById('tip');
+    btn.onclick = function(){
+        this.disabled = true;
+        this.innerText = '抽奖中...';
+        setTimeout(function(){
+            btn.style.display = 'none';
+            tip.style.display = 'block';
+        }, 800);
     };
 </script>
 </body>
