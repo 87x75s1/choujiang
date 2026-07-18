@@ -107,6 +107,9 @@
             width: 250px;
             box-shadow: 0 0 20px rgba(0,0,0,0.2);
             padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .list-title {
             background: #e74c3c;
@@ -115,12 +118,14 @@
             padding: 5px;
             border-radius: 5px 5px 0 0;
             margin: -10px -10px 10px -10px;
+            width: calc(100% + 20px);
         }
         .winner-list {
             list-style: none;
-            max-height: 320px;
+            max-height: 220px;
             overflow-y: auto;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            width: 100%;
         }
         .winner-item {
             display: flex;
@@ -142,15 +147,16 @@
             padding-top: 10px;
         }
         .qrcode-box img {
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             border: 2px solid #e74c3c;
             border-radius: 8px;
+            cursor: zoom-in;
         }
         .qrcode-tip {
             margin-top: 8px;
-            font-size: 16px;
-            color: #333;
+            font-size: 14px;
+            color: #666;
         }
     </style>
 </head>
@@ -174,10 +180,10 @@
             <div class="list-title">中奖名单</div>
             <ul class="winner-list" id="winnerList"></ul>
 
-            <!-- 二维码区域 -->
+            <!-- 二维码区域：默认小尺寸，可放大 -->
             <div class="qrcode-box">
                 <img src="cc/images/webwxgetmsgimg.jpg" alt="扫码抽奖">
-                <div class="qrcode-tip">扫码参与抽奖</div>
+                <div class="qrcode-tip">扫码参与（点击可放大）</div>
             </div>
         </div>
     </div>
