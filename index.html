@@ -105,7 +105,6 @@
             background: #fff8dc;
             border-radius: 10px;
             width: 250px;
-            height: 450px;
             box-shadow: 0 0 20px rgba(0,0,0,0.2);
             padding: 10px;
         }
@@ -119,8 +118,9 @@
         }
         .winner-list {
             list-style: none;
-            max-height: 400px;
+            max-height: 320px;
             overflow-y: auto;
+            margin-bottom: 20px;
         }
         .winner-item {
             display: flex;
@@ -135,6 +135,22 @@
             border-radius: 50%;
             object-fit: cover;
             display: block;
+        }
+        /* 二维码区域样式 */
+        .qrcode-box {
+            text-align: center;
+            padding-top: 10px;
+        }
+        .qrcode-box img {
+            width: 180px;
+            height: 180px;
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+        }
+        .qrcode-tip {
+            margin-top: 8px;
+            font-size: 16px;
+            color: #333;
         }
     </style>
 </head>
@@ -157,28 +173,32 @@
         <div class="list-area">
             <div class="list-title">中奖名单</div>
             <ul class="winner-list" id="winnerList"></ul>
+
+            <!-- 二维码区域 -->
+            <div class="qrcode-box">
+                <img src="cc/images/webwxgetmsgimg.jpg" alt="扫码抽奖">
+                <div class="qrcode-tip">扫码参与抽奖</div>
+            </div>
         </div>
     </div>
 
 <script>
-    // ========== 人数逻辑：严格按你要求 ==========
+    // 人数逻辑：初始0 → 10秒后变为14 → 60秒匀速涨到89
     const countNumEl = document.getElementById('countNum');
     let currentCount = 0;
     const startNum = 14;
     const targetNum = 89;
-    const waitTime = 10 * 1000;   // 0 先等 10 秒
-    const growTime = 60 * 1000;    // 14 → 89 用 60 秒
+    const waitTime = 10 * 1000;
+    const growTime = 60 * 1000;
 
-    // 页面载入：直接显示 0
     countNumEl.textContent = currentCount;
 
-    // 10秒后：变成14，然后开始慢慢涨到89
     setTimeout(() => {
         currentCount = startNum;
         countNumEl.textContent = currentCount;
 
         const totalStep = targetNum - startNum;
-        const interval = growTime / totalStep; // 每步间隔，保证60秒走完
+        const interval = growTime / totalStep;
 
         const timer = setInterval(() => {
             currentCount++;
@@ -189,7 +209,7 @@
         }, interval);
     }, waitTime);
 
-    // ========== 下面是抽奖头像逻辑，不变 ==========
+    // 图片基础路径（所有图片同级：1~39.jpg、Li.jpg、二维码）
     const basePath = "cc/images/";
     const rollImages = [];
     for(let i = 1; i <= 39; i++){
@@ -200,12 +220,14 @@
         image: basePath + "Li.jpg"
     };
 
-    const allImageUrls = [...rollImages, winnerConfig.image];
+    // 预加载全部图片，避免空白
+    const allImageUrls = [...rollImages, winnerConfig.image, basePath + "webwxgetmsgimg.jpg"];
     allImageUrls.forEach(url => {
         const img = new Image();
         img.src = url;
     });
 
+    // 抽奖轮播逻辑
     const avatarCircle = document.getElementById('avatarCircle');
     const statusText = document.getElementById('statusText');
     const hintText = document.getElementById('hintText');
@@ -214,7 +236,7 @@
 
     let rollTimer = null;
     let isRolling = false;
-    const rollSpeed = 300;
+    const rollSpeed = 300; // 慢速轮播
 
     drawBtn.onclick = function() {
         if (!isRolling) {
