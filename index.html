@@ -18,21 +18,12 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         .header h1 {
             font-size: 60px;
             color: #fff;
             text-shadow: 3px 3px 0 #ff6a00;
-        }
-        .count-box {
-            background: #fff8dc;
-            display: inline-block;
-            padding: 10px 25px;
-            border-radius: 20px;
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 20px;
         }
         .main-container {
             display: flex;
@@ -50,6 +41,7 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            position: relative;
         }
         .draw-title {
             background: #e74c3c;
@@ -59,6 +51,17 @@
             padding: 5px;
             border-radius: 5px;
             margin-bottom: 20px;
+        }
+        /* 新增：和截图样式一致的抽奖人数按钮 */
+        .count-box {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: #e74c3c;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 16px;
         }
         .avatar-circle {
             width: 200px;
@@ -139,11 +142,12 @@
 <body>
     <div class="header">
         <h1>幸运大抽奖</h1>
-        <div class="count-box">当前参与抽奖：<span id="countNum">1</span> 人</div>
     </div>
 
     <div class="main-container">
         <div class="draw-area">
+            <!-- 人数信息：位置和样式已和截图对齐 -->
+            <div class="count-box">当前参与抽奖：<span id="countNum">1</span> 人</div>
             <div class="draw-title">特等奖</div>
             <div class="avatar-circle" id="avatarCircle">
                 <span id="statusText" class="status-text">等待抽奖</span>
@@ -159,7 +163,7 @@
     </div>
 
 <script>
-    // 抽奖人数自动增长逻辑
+    // 抽奖人数自动增长逻辑（保持不变：1分钟从1到89）
     const countNumEl = document.getElementById('countNum');
     let currentCount = 1;
     const targetCount = 89;
@@ -174,19 +178,25 @@
         }
     }, stepInterval);
 
-    // 1. 轮询图片：cc/images/ 下的 1.jpg ~ 39.jpg
+    // 图片路径配置（关键：所有图片都在 cc/images/ 里）
+    const basePath = "cc/images/";
+    // 轮询图片：1.jpg ~ 39.jpg
     const rollImages = [];
     for(let i = 1; i <= 39; i++){
-        rollImages.push("cc/images/" + i + ".jpg");
+        rollImages.push(basePath + i + ".jpg");
     }
-    // 2. 中奖配置：名称 Li，图片 cc/images/Li.jpg
+    // 中奖图片：和其他图片平级，也在 cc/images/ 里
     const winnerConfig = {
         name: "Li",
-        image: "cc/images/Li.jpg"
+        image: basePath + "Li.jpg"
     };
 
-    const rollImageUrls = rollImages.map(name => name);
-    const winnerImageUrl = winnerConfig.image;
+    // 预加载图片，解决空白头像问题
+    const allImageUrls = [...rollImages, winnerConfig.image];
+    allImageUrls.forEach(url => {
+        const img = new Image();
+        img.src = url;
+    });
 
     const avatarCircle = document.getElementById('avatarCircle');
     const statusText = document.getElementById('statusText');
@@ -205,22 +215,25 @@
             statusText.style.display = 'none';
 
             let index = 0;
+            // 滚动速度：150ms，给浏览器足够时间加载图片
             rollTimer = setInterval(() => {
-                index = (index + 1) % rollImageUrls.length;
-                avatarCircle.innerHTML = `<img src="${rollImageUrls[index]}" alt="抽奖头像">`;
-            }, 100);
+                index = (index + 1) % rollImages.length;
+                avatarCircle.innerHTML = `<img src="${rollImages[index]}" alt="抽奖头像">`;
+            }, 150);
         } else {
             isRolling = false;
             clearInterval(rollTimer);
             drawBtn.disabled = true;
             drawBtn.innerText = "抽奖完成";
 
-            avatarCircle.innerHTML = `<img src="${winnerImageUrl}" alt="中奖头像">`;
+            // 显示中奖者头像和名称
+            avatarCircle.innerHTML = `<img src="${winnerConfig.image}" alt="中奖头像">`;
             hintText.innerText = `恭喜 ${winnerConfig.name} 中奖！`;
 
+            // 右侧名单同步更新
             const li = document.createElement('li');
             li.className = 'winner-item';
-            li.innerHTML = `<img src="${winnerImageUrl}" alt=""><span>${winnerConfig.name}</span>`;
+            li.innerHTML = `<img src="${winnerConfig.image}" alt=""><span>${winnerConfig.name}</span>`;
             winnerList.prepend(li);
         }
     };
