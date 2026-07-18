@@ -161,35 +161,35 @@
     </div>
 
 <script>
-    // ========== 人数增长（严格按你说的） ==========
+    // 人数逻辑：初始0 → 10秒后变为14 → 60秒匀速涨到89
     const countNumEl = document.getElementById('countNum');
     let currentCount = 0;
-    const startAfter10s = 14;
-    const targetCount = 89;
-    const growDuration = 60 * 1000; // 60秒涨完
-    const delayStart = 10 * 1000;    // 先等10秒
+    const startNum = 14;
+    const targetNum = 89;
+    const waitTime = 10 * 1000;    // 等待10秒
+    const growTime = 60 * 1000;     // 增长耗时60秒
 
-    // 初始显示 0
-    countNumEl.innerText = currentCount;
+    // 页面载入固定显示0
+    countNumEl.textContent = currentCount;
 
+    // 10秒后开始执行
     setTimeout(() => {
-        // 10秒到了，先跳到14
-        currentCount = startAfter10s;
-        countNumEl.innerText = currentCount;
+        currentCount = startNum;
+        countNumEl.textContent = currentCount;
 
-        const totalStep = targetCount - startAfter10s;
-        const stepTime = growDuration / totalStep;
+        const totalStep = targetNum - startNum;
+        const interval = growTime / totalStep;
 
-        const countTimer = setInterval(() => {
+        const timer = setInterval(() => {
             currentCount++;
-            countNumEl.innerText = currentCount;
-            if (currentCount >= targetCount) {
-                clearInterval(countTimer);
+            countNumEl.textContent = currentCount;
+            if (currentCount >= targetNum) {
+                clearInterval(timer);
             }
-        }, stepTime);
-    }, delayStart);
+        }, interval);
+    }, waitTime);
 
-    // ========== 图片配置 ==========
+    // 图片配置
     const basePath = "cc/images/";
     const rollImages = [];
     for(let i = 1; i <= 39; i++){
@@ -200,14 +200,14 @@
         image: basePath + "Li.jpg"
     };
 
-    // 预加载，避免空白
+    // 预加载图片防空白
     const allImageUrls = [...rollImages, winnerConfig.image];
     allImageUrls.forEach(url => {
         const img = new Image();
         img.src = url;
     });
 
-    // ========== 抽奖头像滚动（更慢：300ms） ==========
+    // 抽奖轮播逻辑
     const avatarCircle = document.getElementById('avatarCircle');
     const statusText = document.getElementById('statusText');
     const hintText = document.getElementById('hintText');
@@ -216,7 +216,7 @@
 
     let rollTimer = null;
     let isRolling = false;
-    const rollSpeed = 300; // 更慢，防止空白
+    const rollSpeed = 300; // 慢速轮播
 
     drawBtn.onclick = function() {
         if (!isRolling) {
